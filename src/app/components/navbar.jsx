@@ -12,7 +12,7 @@ export function Navbar() {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
   return (
-    <header className="flex justify-around fixed z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
+    <header className="flex justify-around fixed z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <div className="relative h-8 w-8">
@@ -39,8 +39,8 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden lg:flex items-center space-x-4">
-          <NavItem href="projects" label="Proyectos" hasDropdown />
-          <NavItem href="about" label="Nosotros" hasDropdown />
+          <NavItem href="/projects" label="Proyectos" hasDropdown />
+          <NavItem href="/about" label="Nosotros" hasDropdown />
         </nav>
 
         <div className="hidden lg:flex items-center space-x-4">
@@ -49,15 +49,19 @@ export function Navbar() {
             <ChevronDown className="h-4 w-4" />
           </div>
           <ThemeToggle />
-          <Button
-            variant="outline"
-            className="border-primary text-primary hover:bg-primary hover:text-white"
-          >
-            Acceder
-          </Button>
-          <Button className="bg-primary text-white hover:bg-primary/90">
-            Registrarme
-          </Button>
+          <Link href="/login" className="cursor-pointer">
+            <Button
+              variant="outline"
+              className="border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+            >
+              Acceder
+            </Button>
+          </Link>
+          <Link href="/register" className="cursor-pointer">
+            <Button className="bg-primary text-white hover:bg-primary/90 cursor-pointer">
+              Registrarme
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Actions */}
@@ -76,28 +80,32 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="lg:hidden container pb-4">
           <nav className="flex flex-col space-y-4 pt-2">
-            <MobileNavItem href="proyectos" label="Proyectos" />
-            <MobileNavItem href="nosotros" label="Nosotros" />
-            <MobileNavItem href="wealth" label="Wealth" />
-            <MobileNavItem href="token" label="Token" />
-            <MobileNavItem href="novedades" label="Novedades" />
-            <MobileNavItem href="ayuda" label="Ayuda" />
-            <MobileNavItem href="blog" label="Blog" />
+            <MobileNavItem href="/projects" label="Proyectos" />
+            <MobileNavItem href="/about" label="Nosotros" />
+            <MobileNavItem href="/wealth" label="Wealth" />
+            <MobileNavItem href="/token" label="Token" />
+            <MobileNavItem href="/news" label="Novedades" />
+            <MobileNavItem href="/help" label="Ayuda" />
+            <MobileNavItem href="/blog" label="Blog" />
             <div className="flex items-center space-x-2 pt-2">
               <Globe className="h-5 w-5" />
               <span>ES</span>
               <ChevronDown className="h-4 w-4" />
             </div>
             <div className="flex flex-col space-y-2 pt-2">
-              <Button
-                variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-white w-full"
-              >
-                Acceder
-              </Button>
-              <Button className="bg-primary text-white hover:bg-primary/90 w-full">
-                Registrarme
-              </Button>
+              <Link href="/login" className="w-full cursor-pointer">
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary hover:text-white w-full cursor-pointer"
+                >
+                  Acceder
+                </Button>
+              </Link>
+              <Link href="/register" className="w-full cursor-pointer">
+                <Button className="bg-primary text-white hover:bg-primary/90 w-full cursor-pointer">
+                  Registrarme
+                </Button>
+              </Link>
             </div>
           </nav>
         </div>
@@ -110,7 +118,7 @@ function NavItem({ href, label, hasDropdown = false }) {
   return (
     <Link
       href={href}
-      className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      className="flex items-center text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
     >
       {label}
       {hasDropdown && <ChevronDown className="ml-1 h-4 w-4" />}
@@ -122,7 +130,7 @@ function MobileNavItem({ href, label }) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-between text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      className="flex items-center justify-between text-sm font-medium text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
     >
       {label}
       <ChevronDown className="h-4 w-4" />

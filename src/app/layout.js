@@ -1,17 +1,12 @@
+"use client";
+
 import React from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
-import { Navbar } from "./components/navbar";
-import { Footer } from "./components/footer";
+import { NavigationWrapper } from "./components/navigation-wrapper";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = {
-  title: "Landora - Inversión Inmobiliaria",
-  description:
-    "Genera ingresos mensuales invirtiendo en proyectos inmobiliarios",
-};
 
 export default function RootLayout({ children }) {
   return (
@@ -23,9 +18,7 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
-          <Footer />
+          <NavigationWrapper>{children}</NavigationWrapper>
         </ThemeProvider>
       </body>
     </html>
