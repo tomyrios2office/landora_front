@@ -47,7 +47,6 @@ export default function RegisterPage() {
 
       <div className="relative min-h-screen flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-lg mx-auto space-y-8">
-          {/* Welcome text */}
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-900/80 dark:from-white dark:to-white/80">
               Únete a más de 20.000 inversores

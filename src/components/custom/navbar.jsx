@@ -1,19 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
-import { Menu, X, ChevronDown, Globe } from "lucide-react";
+import { Menu, X, ChevronDown, Globe, LogOut } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
+  useEffect(() => {
+    if (session) {
+      console.log(session);
+    }
+  }, []);
+
   return (
     <header className="flex justify-around fixed z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="flex-container flex h-16 items-center justify-around w-full">
         <Link href="/" className="flex items-center space-x-2">
           <div className="relative h-8 w-8">
             <svg
@@ -38,9 +49,11 @@ export function Navbar() {
           <span className="text-xl font-bold text-primary">Landora</span>
         </Link>
 
-        <nav className="hidden lg:flex items-center space-x-4">
+        <nav className="hidden  lg:flex items-center space-x-4 gap-4">
           <NavItem href="/projects" label="Proyectos" hasDropdown />
           <NavItem href="/about" label="Nosotros" hasDropdown />
+          <NavItem href="/blog" label="Blog" />
+          <NavItem href="/support" label="Soporte" hasDropdown />
         </nav>
 
         <div className="hidden lg:flex items-center space-x-4">
@@ -49,19 +62,32 @@ export function Navbar() {
             <ChevronDown className="h-4 w-4" />
           </div>
           <ThemeToggle />
-          <Link href="/login" className="cursor-pointer">
+          {session ? (
             <Button
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+              onClick={handleLogout}
             >
-              Acceder
+              <LogOut className="h-4 w-4 mr-2" />
+              Cerrar sesión
             </Button>
-          </Link>
-          <Link href="/register" className="cursor-pointer">
-            <Button className="bg-primary text-white hover:bg-primary/90 cursor-pointer">
-              Registrarme
-            </Button>
-          </Link>
+          ) : (
+            <>
+              <Link href="/login" className="cursor-pointer">
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
+                >
+                  Acceder
+                </Button>
+              </Link>
+              <Link href="/register" className="cursor-pointer">
+                <Button className="bg-primary text-white hover:bg-primary/90 cursor-pointer">
+                  Registrarme
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Actions */}
@@ -82,10 +108,7 @@ export function Navbar() {
           <nav className="flex flex-col space-y-4 pt-2">
             <MobileNavItem href="/projects" label="Proyectos" />
             <MobileNavItem href="/about" label="Nosotros" />
-            <MobileNavItem href="/wealth" label="Wealth" />
             <MobileNavItem href="/token" label="Token" />
-            <MobileNavItem href="/news" label="Novedades" />
-            <MobileNavItem href="/help" label="Ayuda" />
             <MobileNavItem href="/blog" label="Blog" />
             <div className="flex items-center space-x-2 pt-2">
               <Globe className="h-5 w-5" />
@@ -93,19 +116,32 @@ export function Navbar() {
               <ChevronDown className="h-4 w-4" />
             </div>
             <div className="flex flex-col space-y-2 pt-2">
-              <Link href="/login" className="w-full cursor-pointer">
+              {session ? (
                 <Button
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white w-full cursor-pointer"
+                  onClick={handleLogout}
                 >
-                  Acceder
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Cerrar sesión
                 </Button>
-              </Link>
-              <Link href="/register" className="w-full cursor-pointer">
-                <Button className="bg-primary text-white hover:bg-primary/90 w-full cursor-pointer">
-                  Registrarme
-                </Button>
-              </Link>
+              ) : (
+                <>
+                  <Link href="/login" className="w-full cursor-pointer">
+                    <Button
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-white w-full cursor-pointer"
+                    >
+                      Acceder
+                    </Button>
+                  </Link>
+                  <Link href="/register" className="w-full cursor-pointer">
+                    <Button className="bg-primary text-white hover:bg-primary/90 w-full cursor-pointer">
+                      Registrarme
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>

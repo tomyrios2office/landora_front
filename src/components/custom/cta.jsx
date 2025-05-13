@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 export function Cta() {
   return (
-    <section className="py-20 bg-gradient-to-b from-primary/5 to-background dark:from-primary/10 dark:to-background transition-colors">
+    <section className="py-20 bg-gradient bg-black/10 from-primary/5 to-background dark:from-primary/10 dark:to-background transition-colors">
       <div className="container">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-foreground tracking-tight">
             Empieza a construir tu patrimonio hoy
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-            Invertí en proyectos inmobiliarios desde 50 U$D y genera ingresos
+            Invertí en proyectos inmobiliarios desde 50 U$D y genera ingresos
             pasivos mensuales con total transparencia y seguridad.
           </p>
 
