@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -5,6 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DIRECT_URL")
+}
+enum ProjectTag {
+  Financiando
+  Rentando
+  Cerrado
 }
 
 model Session {
@@ -17,15 +23,15 @@ model Session {
 
 model User {
   id            String   @id @default(cuid())
-  name          String? 
-  email         String?  @unique 
+  name          String
+  email         String  @unique 
   emailVerified DateTime?
   image         String?
-  password      String?  
+  password      String?
+  phone         String?
 
   accounts      Account[]
   sessions      Session[] 
-  
 }
 
 model Account {
@@ -43,8 +49,6 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-
-
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -52,3 +56,26 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model BlogEntry {
+  id String @id @default(cuid())
+  title String
+  content String
+  date DateTime
+  image String
+}
+
+
+model LandProject {
+  id String @id @default(cuid())
+  name String
+  image String
+  tokenName String
+  investmentPeriod String
+  totalProfit String
+  anualProfit String
+  price Decimal
+  location String
+  tag ProjectTag
+}
+

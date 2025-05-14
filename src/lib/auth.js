@@ -6,12 +6,11 @@ import prisma from "./prisma";
 import { compare } from "bcryptjs";
 
 export const authOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma), // ADAPTER FOR DATABASE (PRISMA)
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
       authorization: {
         params: {
           prompt: "select_account",
@@ -42,15 +41,17 @@ export const authOptions = {
       },
     }),
   ],
+  // FOR DEFAULT IT REDIRECTS TO /login
   pages: {
     signIn: "/login",
     error: "/login",
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 días
+    maxAge: 30 * 24 * 60 * 60, // SESSION LAST 30 DAYS
   },
   callbacks: {
+    // GOOGLE PROVIDER
     async signIn({ user, account, profile, email, credentials }) {
       if (account?.provider === "google") {
         const existingUser = await prisma.user.findUnique({

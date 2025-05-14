@@ -74,23 +74,22 @@ export function Navbar() {
           ) : (
             <>
               <Link href="/login" className="cursor-pointer">
-                <Button
-                  variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-white cursor-pointer"
-                >
-                  Acceder
+                <Button className="bg-primary text-white hover:bg-primary/90 cursor-pointer">
+                  Registrarme
                 </Button>
               </Link>
               <Link href="/register" className="cursor-pointer">
-                <Button className="bg-primary text-white hover:bg-primary/90 cursor-pointer">
-                  Registrarme
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-gray-200 cursor-pointer"
+                >
+                  Acceder
                 </Button>
               </Link>
             </>
           )}
         </div>
 
-        {/* Mobile Actions */}
         <div className="flex lg:hidden items-center">
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMenu}>

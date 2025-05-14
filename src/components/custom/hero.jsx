@@ -6,7 +6,7 @@ export function Hero() {
     <section className="relative overflow-hidden py-20 md:py-32 bg-gradient-to-b from-amber-50 to-white dark:from-gray-900 dark:to-background">
       <div className="container relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="flex flex-col justify-center text-center lg:text-left space-y-8 mx-8">
+          <div className="flex flex-col justify-center text-center lg:text-left space-y-8 mx-8 pl-4">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               <span className="text-gray-900 dark:text-white">Empieza a </span>
               <span className="text-primary">generar ingresos pasivos</span>
@@ -20,7 +20,7 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href={"/register"}
-                className="bg-primary hover:bg-primary/90 text-white font-medium px-8 border-2 rounded-lg p-1"
+                className="bg-primary hover:bg-primary/90 text-white font-medium px-8 border-2 rounded-lg p-1 dark:bg-black dark:border-b-blue-100"
               >
                 Empieza con solo 50U$D
               </Link>

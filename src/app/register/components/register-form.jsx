@@ -23,6 +23,87 @@ export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    countryCode: "+54",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const handleCountryCodeChange = (value) => {
+    setFormData((prev) => ({
+      ...prev,
+      countryCode: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (step < totalSteps) {
+      handleNextStep();
+      return;
+    }
+
+    // Validar contraseñas
+    if (formData.password !== formData.confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError("");
+
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: `${formData.countryCode}${formData.phone}`,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Error al crear la cuenta");
+      }
+
+      // Iniciar sesión automáticamente después del registro
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (result?.error) {
+        throw new Error("Error al iniciar sesión");
+      }
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Error:", error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleGoogleSignIn = async () => {
     try {
@@ -48,8 +129,7 @@ export function RegisterForm() {
     }
   };
 
-  const handleNextStep = (e) => {
-    e.preventDefault();
+  const handleNextStep = () => {
     if (step < totalSteps) {
       setStep(step + 1);
     }
@@ -62,7 +142,7 @@ export function RegisterForm() {
   };
 
   return (
-    <form className="space-y-6" onSubmit={handleNextStep}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="relative">
         <div className="w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full mb-8">
           <div
@@ -103,6 +183,9 @@ export function RegisterForm() {
                 placeholder="Juan"
                 required
                 className="bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -112,6 +195,9 @@ export function RegisterForm() {
                 placeholder="Pérez"
                 required
                 className="bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -124,28 +210,37 @@ export function RegisterForm() {
               placeholder="nombre@ejemplo.com"
               required
               className="bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm"
+              value={formData.email}
+              onChange={handleInputChange}
+              disabled={isLoading}
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="phone">Teléfono</Label>
             <div className="flex gap-2">
-              <Select defaultValue="+34">
+              <Select
+                value={formData.countryCode}
+                onValueChange={handleCountryCodeChange}
+              >
                 <SelectTrigger className="w-[100px] bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm">
                   <SelectValue placeholder="Código" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="+54">ᴬᴿ +54</SelectItem>
                   <SelectItem value="+34">🇪🇸 +34</SelectItem>
                   <SelectItem value="+1">🇺🇸 +1</SelectItem>
-                  <SelectItem value="+44">🇬🇧 +44</SelectItem>
                 </SelectContent>
               </Select>
               <Input
                 id="phone"
                 type="tel"
-                placeholder="612 345 678"
+                placeholder="11 5555-5555"
                 required
                 className="flex-1 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm"
+                value={formData.phone}
+                onChange={handleInputChange}
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -160,6 +255,9 @@ export function RegisterForm() {
               placeholder="••••••••"
               required
               className="bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm"
+              value={formData.password}
+              onChange={handleInputChange}
+              disabled={isLoading}
             />
           </div>
 
@@ -171,6 +269,9 @@ export function RegisterForm() {
               placeholder="••••••••"
               required
               className="bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              disabled={isLoading}
             />
           </div>
 
@@ -178,7 +279,7 @@ export function RegisterForm() {
             <Checkbox id="terms" className="mt-1" required />
             <Label
               htmlFor="terms"
-              className="text-sm text-muted-foreground leading-tight flex "
+              className="text-sm text-muted-foreground leading-tight flex"
             >
               <h4>
                 Acepto los{" "}
@@ -201,6 +302,8 @@ export function RegisterForm() {
         </div>
       )}
 
+      {error && <p className="text-sm text-red-500 text-center">{error}</p>}
+
       <div className="flex justify-between gap-4">
         {step > 1 && (
           <Button
@@ -208,17 +311,46 @@ export function RegisterForm() {
             variant="outline"
             onClick={handlePrevStep}
             className="flex-1"
+            disabled={isLoading}
           >
             Anterior
           </Button>
         )}
         <div className="flex flex-col w-full gap-4 items-center">
           <Button
-            type={step === totalSteps ? "submit" : "button"}
+            type="submit"
             className="flex-1 bg-primary hover:bg-primary/90 w-full"
-            onClick={step < totalSteps ? handleNextStep : undefined}
+            disabled={isLoading}
           >
-            {step === totalSteps ? "Crear cuenta" : "Siguiente"}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                {step === totalSteps ? "Creando cuenta..." : "Procesando..."}
+              </span>
+            ) : step === totalSteps ? (
+              "Crear cuenta"
+            ) : (
+              "Siguiente"
+            )}
           </Button>
           {step === 1 && (
             <p className="text-sm text-muted-foreground w-full text-center">
@@ -243,8 +375,6 @@ export function RegisterForm() {
               </span>
             </div>
           </div>
-
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
           <Button
             type="button"

@@ -4,7 +4,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="flex justify-center bg-gray-100 dark:bg-gray-900 pt-16 pb-8">
+    <footer className="flex justify-center bg-gray-100 dark:bg-gray-800 pt-16 pb-8">
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           <div className="lg:col-span-2">
