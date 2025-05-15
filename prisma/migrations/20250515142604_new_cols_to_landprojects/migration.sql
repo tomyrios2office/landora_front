@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "LandProject" ALTER COLUMN "price" SET DATA TYPE TEXT,
+ALTER COLUMN "minPrice" SET DATA TYPE TEXT;

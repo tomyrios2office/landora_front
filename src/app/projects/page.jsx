@@ -4,34 +4,21 @@ import { useState } from "react";
 import { ProjectsHeader } from "./components/ProjectsHeader";
 import { ProjectsFilter } from "./components/ProjectsFilter";
 import { ProjectsList } from "./components/ProjectsList";
-import { projectsData } from "./data";
+import { useEffect } from "react";
 
 export default function ProjectsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  // FIND PROJECTS IN DB
+  const [projects, setProjects] = useState([]);
 
-  const filteredProjects = projectsData.filter((project) => {
-    const matchesSearch =
-      project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.location.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const response = await fetch("/api/projects");
+      const data = await response.json();
+      setProjects(data);
+    };
 
-    const matchesStatus =
-      statusFilter === "all" ||
-      (statusFilter === "funding" && project.status === "Financiando") ||
-      (statusFilter === "almost" && project.status === "Casi completo") ||
-      (statusFilter === "completed" && project.status === "Completado");
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const handleSearch = (value) => {
-    setSearchTerm(value);
-  };
-
-  const handleFilterChange = (value) => {
-    setStatusFilter(value);
-  };
+    fetchProjects();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background pt-18">
@@ -39,12 +26,9 @@ export default function ProjectsPage() {
         <div className="space-y-6">
           <ProjectsHeader />
 
-          <ProjectsFilter
-            onSearch={handleSearch}
-            onFilterChange={handleFilterChange}
-          />
+          <ProjectsFilter />
 
-          <ProjectsList projects={filteredProjects} />
+          <ProjectsList projects={projects} />
         </div>
       </div>
     </div>

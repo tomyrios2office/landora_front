@@ -69,13 +69,18 @@ model BlogEntry {
 model LandProject {
   id String @id @default(cuid())
   name String
+  content String
   image String
   tokenName String
-  investmentPeriod String
+  investmentPeriod Int
   totalProfit String
   anualProfit String
-  price Decimal
+  price String
   location String
   tag ProjectTag
+  progress Int
+  minPrice String
+  rentStart DateTime
+
 }
 
